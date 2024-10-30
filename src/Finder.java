@@ -8,22 +8,31 @@ import java.util.ArrayList;
  * for Adventures in Algorithms
  * At Menlo School in Atherton, CA
  *
- * Completed by: [YOUR NAME HERE]
+ * Completed by: SIERRA SHAW
  **/
 
 public class Finder {
 
     private static final String INVALID = "INVALID KEY";
-    public static int RADIX = 256;
-    public static int first_p = 1847;
-    public static int second_p = 61;
+    public static final int RADIX = 256;
+    public static final int first_p = 506683;
+    public static final int second_p = 1847;
     public static ArrayList[] keys = new ArrayList[first_p];
+
+    private class Pair {
+        private int key;
+        private String val;
+
+        Pair(int key, String val) {
+            this.key = key;
+            this.val = val;
+        }
+    }
 
     public Finder() {}
 
     public void buildTable(BufferedReader br, int keyCol, int valCol) throws IOException {
         String line;
-//        ArrayList[] keys = new ArrayList[first_p];
         String key;
         String value;
         int firstHash;
@@ -36,11 +45,10 @@ public class Finder {
             firstHash = hash(key, key.length(), first_p);
             secondHash = hash(key, key.length(), second_p);
             if (keys[firstHash] == null) {
-                keys[firstHash] = new ArrayList<Object[]>();
+                keys[firstHash] = new ArrayList<Pair>();
             }
-            Object[] pair = new Object[2];
-            pair[0] = secondHash;
-            pair[1] = value;
+
+            Pair pair = new Pair(secondHash, value);
             keys[firstHash].add(pair);
         }
         br.close();
@@ -52,11 +60,11 @@ public class Finder {
         if (keys[firstHash] == null) {
             return INVALID;
         }
-        ArrayList<Object> toSearch = keys[firstHash];
+        ArrayList<Pair> toSearch = keys[firstHash];
         int secondHash = hash(key, keyLen, second_p);
         for (int i = 0; i < toSearch.size(); i++) {
-            if (toSearch.get(i)[0] == Integer.valueOf(secondHash)) {
-                return toSearch.get(i)[1];
+            if (toSearch.get(i).key == secondHash) {
+                return toSearch.get(i).val;
             }
         }
         return INVALID;
@@ -68,6 +76,6 @@ public class Finder {
         for(int i = 0; i < len; i++) {
             hashed = (RADIX * hashed + str.charAt(i)) % p;
         }
-        return hashed;
+        return hashed % p;
     }
 }
