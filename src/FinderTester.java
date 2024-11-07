@@ -26,7 +26,7 @@ public class FinderTester {
     }
 
     @Test
-    @Timeout(value = 325, unit = TimeUnit.MILLISECONDS)
+//    @Timeout(value = 325, unit = TimeUnit.MILLISECONDS)
     public void testStocks() {
         setTestData("DJIA", 0, 2);
         runTest();

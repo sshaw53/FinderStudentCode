@@ -15,6 +15,7 @@ public class Finder {
 
     private static final String INVALID = "INVALID KEY";
     public static final int RADIX = 256;
+    // Picked a large prime number to avoid collisions while trying not to take up too much storage
     public static final int initialArrSize = 10937;
     public static int arrSize = initialArrSize;
     public static Pair[] keys = new Pair[initialArrSize];
@@ -86,10 +87,10 @@ public class Finder {
         }
         hashed %= p;
 
-        // Keep moving to the next item in the array until you find a blank spot
+        // Keep moving to the next item in the array until you find a blank spot, but make sure to wrap if it overflows
         if (array != null) {
             while (array[hashed] != null) {
-                hashed += 1;
+                hashed = (hashed + 1) % p;
             }
         }
         return hashed;
@@ -98,8 +99,11 @@ public class Finder {
     public static void rehash(Pair[] tempKeys) {
         // Calls the hash function and rehashes every item in the array to a new array
         for (Pair pair: keys) {
-            int idx = hash(pair.key, pair.key.length(), arrSize, tempKeys);
-            tempKeys[idx] = pair;
+            // If not a null index in the array
+            if (pair != null) {
+                int idx = hash(pair.key, pair.key.length(), arrSize, tempKeys);
+                tempKeys[idx] = pair;
+            }
         }
     }
 }
